@@ -1,5 +1,7 @@
 package com.jonikoone.remotedriving.ui.fragments
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,10 +11,24 @@ import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.arellomobile.mvp.MvpAppCompatFragment
 import com.jonikoone.remotedriving.R
+import com.jonikoone.remotedriving.db.ConnectionsDataBase
 import com.jonikoone.remotedriving.recyclers.adapters.ConnectionsViewAdapter
+import com.jonikoone.remotedriving.ui.mvp.views.HomeView
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import org.kodein.di.Kodein
+import org.kodein.di.KodeinAware
+import org.kodein.di.android.x.kodein
+import org.kodein.di.generic.instance
+import ru.terrakok.cicerone.android.support.SupportAppScreen
 
-class HomeScreenFragment : Fragment() {
+class HomeScreenFragment : MvpAppCompatFragment(), HomeView, CoroutineScope, KodeinAware {
+    override val coroutineContext = Dispatchers.Main
+    override val kodein by kodein()
+
     companion object {
         fun newFreament() = HomeScreenFragment()
     }
@@ -20,6 +36,8 @@ class HomeScreenFragment : Fragment() {
     val adapter: ConnectionsViewAdapter by lazy {
         ConnectionsViewAdapter()
     }
+
+    private val database by instance<ConnectionsDataBase>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,17 +54,63 @@ class HomeScreenFragment : Fragment() {
 
         view.findViewById<Button>(R.id.btnAddConnection)?.apply {
             setOnClickListener {
-                childFragmentManager.beginTransaction()
-                    .add(CreateConnectionScreenFragment.newFragment(), "create connection")
-                    .commit()
+                activity?.supportFragmentManager?.beginTransaction()?.replace(
+                    R.id.fragmentContainer,
+                    CreateConnectionScreenFragment.newFragment()
+                )?.commitNow()
 
             }
+        }
+
+        launch(Dispatchers.IO) {
+            val connections = database.connectionDao().getConnections()
+            Log.e("Home", connections.toString())
+            adapter.addConnections(connections)
         }
 
         return view
     }
 
+    override fun createNewConnection() {
+        Log.d("Home", "createNewConnection")
+    }
+
+    override fun openConnection() {
+        Log.d("Home", "openConnection")
+    }
 
 
 }
 
+/*
+sealed class Screens(
+    val fragmentInstance: Fragment,
+    val screenKeyName: String,
+    val activityIntentBlock: ((Context?) -> Intent)? = null
+) : SupportAppScreen() {
+    override fun getFragment(): Fragment {
+        return fragmentInstance
+    }
+
+    override fun getScreenKey(): String {
+        return screenKeyName
+    }
+
+    override fun getActivityIntent(context: Context?): Intent {
+        activityIntentBlock?.let { return it.invoke(context) }
+        return Intent()
+    }
+}
+
+class HomeScreen(
+    fragmentInstance: Fragment = HomeScreenFragment.newFreament(),
+    screenKeyName: String = "Home Screen"
+) : Screens(
+    fragmentInstance,
+    screenKeyName
+)
+
+class CreateConnectionScreen(
+    fragmentInstance: Fragment = CreateConnectionScreenFragment.newFragment(),
+    screenKeyName: String = "Create connection Screen"
+) : Screens (fragmentInstance, screenKeyName)*/

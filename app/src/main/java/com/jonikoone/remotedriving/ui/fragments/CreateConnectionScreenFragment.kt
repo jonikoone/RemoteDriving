@@ -36,9 +36,6 @@ class CreateConnectionScreenFragment: Fragment() {
 
         }
 
-
-
-
         return view
     }
 

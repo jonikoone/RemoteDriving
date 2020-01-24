@@ -5,15 +5,20 @@ import android.view.ViewGroup
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.jonikoone.remotedriving.R
-import com.jonikoone.remotedriving.data.Connection
+import com.jonikoone.remotedriving.db.entites.ConnectionEntity
 import com.jonikoone.remotedriving.recyclers.viewHolders.ConnectionViewHolder
 
 class ConnectionsViewAdapter: RecyclerView.Adapter<ConnectionViewHolder>() {
-    private val connections = mutableListOf<Connection>()
+    private val connections = mutableListOf<ConnectionEntity>()
 
-    fun addConnection(newConnection: Connection) {
+    fun addConnection(newConnection: ConnectionEntity) {
         connections += newConnection
         notifyItemRangeInserted(connections.lastIndex, 1)
+    }
+
+    fun addConnections(connections: List<ConnectionEntity>) {
+        this.connections += connections
+        notifyItemRangeInserted(this.connections.size, connections.size)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ConnectionViewHolder {

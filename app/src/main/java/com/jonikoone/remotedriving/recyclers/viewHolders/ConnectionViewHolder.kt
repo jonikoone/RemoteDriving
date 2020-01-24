@@ -6,11 +6,11 @@ import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.jonikoone.remotedriving.R
-import com.jonikoone.remotedriving.data.Connection
+import com.jonikoone.remotedriving.db.entites.ConnectionEntity
 
 //TODO: change cardview to custom view may be
 class ConnectionViewHolder(private val viewCard: CardView) : RecyclerView.ViewHolder(viewCard) {
-    fun onBind(connection: Connection) {
+    fun onBind(connection: ConnectionEntity) {
         viewCard.findViewById<TextView>(R.id.txtNameConnection)?.apply {
             text = connection.name
         }
