@@ -16,13 +16,24 @@ class TouchScreen(context: Context, attr: AttributeSet) : View(context, attr) {
 
     lateinit var onSendPosotion: (Offset) -> Unit
 
-    var xPosition: Float = 0F
-    var yPosition: Float = 0F
+    private var xPosition = 0f
+    private var yPosition = 0f
 
-    var sckipFirstTouthEvent = true
+    private var xSize = 0
+    private var ySize = 0
 
-    val paint = Paint().apply {
-        this.color = Color.BLUE
+    private val fingerPositionPaint = Paint().apply {
+        color = Color.BLUE
+    }
+
+    private val borderPaint = Paint().apply {
+        color = Color.GRAY
+    }
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        xSize = w
+        ySize = h
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
@@ -49,7 +60,8 @@ class TouchScreen(context: Context, attr: AttributeSet) : View(context, attr) {
 
     override fun onDraw(canvas: Canvas?) {
         canvas?.apply {
-            drawText("Touch position: $xPosition:$yPosition", 10f, 10f, paint)
+            drawRoundRect(10f, 10f, xSize - 10f, ySize - 10f, 10f, 10f, borderPaint)
+            drawText("Touch position: $xPosition:$yPosition", 10f, 10f, fingerPositionPaint)
         }
         invalidate()
     }

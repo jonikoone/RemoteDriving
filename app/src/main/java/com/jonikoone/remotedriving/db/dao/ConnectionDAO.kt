@@ -3,7 +3,6 @@ package com.jonikoone.remotedriving.db.dao
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import com.jonikoone.remotedriving.data.Connection
 import com.jonikoone.remotedriving.db.entites.ConnectionEntity
 
 @Dao
