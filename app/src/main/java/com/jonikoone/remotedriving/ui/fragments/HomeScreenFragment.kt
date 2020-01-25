@@ -18,6 +18,7 @@ import com.jonikoone.remotedriving.ui.screens.CreateConnectionScreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
@@ -60,7 +61,9 @@ class HomeScreenFragment : Fragment(), CoroutineScope, KodeinAware {
         launch(Dispatchers.IO) {
             val connections = database.connectionDao().getConnections()
             Log.e("Home", connections.toString())
-            adapter.addConnections(connections)
+            withContext(Dispatchers.Main) {
+                adapter.addConnections(connections)
+            }
         }
 
         return view

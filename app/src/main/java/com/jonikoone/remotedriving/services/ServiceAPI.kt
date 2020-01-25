@@ -6,7 +6,9 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 import retrofit2.http.Query
 
-interface ServiceAPI {
+interface RetrofitService
+
+interface ServiceAPI : RetrofitService {
     @POST("/api")
     fun sendCommand(@Query("message") msg: String): Call<String>
 

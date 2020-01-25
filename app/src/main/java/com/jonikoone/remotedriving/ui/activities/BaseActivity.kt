@@ -36,7 +36,6 @@ class BaseActivity : AppCompatActivity(), KodeinAware {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.e("BaseActivity", "onCreate")
         setContentView(R.layout.activity_base)
         cicerone.router.newRootScreen(HomeScreen())
     }
@@ -55,10 +54,5 @@ class BaseActivity : AppCompatActivity(), KodeinAware {
         cicerone.router.exit()
     }
 
-    /*val ciceroneModule = Kodein.Module(name = "ciceroneModule") {
-        bind<Navigator>() with singleton {
-
-        }
-    }*/
 }
 

@@ -14,4 +14,4 @@ sealed class AppScreens(private val screenName: String, private val fragment: Fr
 
 class HomeScreen : AppScreens("Home screen", HomeScreenFragment())
 class CreateConnectionScreen : AppScreens("Create connection screen", CreateConnectionScreenFragment())
-class ControlDriveScreen : AppScreens("Control drive screen", ControlDriveFragment())
+class ControlDriveScreen(address: String) : AppScreens("Control drive screen", ControlDriveFragment.newFragmet(address))
