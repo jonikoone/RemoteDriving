@@ -3,7 +3,6 @@ package com.jonikoone.remotedriving.app
 import android.app.Application
 import android.util.Log
 import androidx.room.Room
-import com.jonikoone.remotedriving.ciceroneModule
 import com.jonikoone.remotedriving.db.ConnectionsDataBase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -26,7 +25,7 @@ class App : Application(), KodeinAware {
         }
         bind<Cicerone<Router>>() with singleton { Cicerone.create() }
         //bind<NavigatorHolder>() with singleton { instance<Cicerone<Router>>().navigatorHolder }
-        import(ciceroneModule)
+//        import(ciceroneModule)
 
     }
 

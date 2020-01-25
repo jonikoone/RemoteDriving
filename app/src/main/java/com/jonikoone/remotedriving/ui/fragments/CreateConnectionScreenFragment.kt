@@ -10,9 +10,6 @@ import androidx.fragment.app.Fragment
 import com.jonikoone.remotedriving.R
 
 class CreateConnectionScreenFragment: Fragment() {
-    companion object {
-        fun newFragment() = CreateConnectionScreenFragment()
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

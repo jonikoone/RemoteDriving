@@ -48,9 +48,9 @@ dependencies {
     implementation 'ru.terrakok.cicerone:cicerone:5.0.0'
     implementation 'org.kodein.di:kodein-di-generic-jvm:6.2.0'
     implementation 'org.kodein.di:kodein-di-framework-android-x:6.2.0'
-    implementation 'com.arello-mobile:moxy-android:1.5.5'
-    implementation 'tech.schoolhelper:moxy-x-androidx:1.7.0'
-    kapt 'com.arello-mobile:moxy-compiler:1.5.5'
+    //implementation 'com.arello-mobile:moxy-android:1.5.5'
+    //implementation 'tech.schoolhelper:moxy-x-androidx:1.7.0'
+    //kapt 'com.arello-mobile:moxy-compiler:1.5.5'
 
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.core:core-ktx:1.1.0'

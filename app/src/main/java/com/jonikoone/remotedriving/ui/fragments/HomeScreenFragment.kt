@@ -11,11 +11,10 @@ import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.arellomobile.mvp.MvpAppCompatFragment
 import com.jonikoone.remotedriving.R
 import com.jonikoone.remotedriving.db.ConnectionsDataBase
 import com.jonikoone.remotedriving.recyclers.adapters.ConnectionsViewAdapter
-import com.jonikoone.remotedriving.ui.mvp.views.HomeView
+import com.jonikoone.remotedriving.ui.screens.CreateConnectionScreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -23,15 +22,15 @@ import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
+import ru.terrakok.cicerone.Cicerone
+import ru.terrakok.cicerone.Router
 import ru.terrakok.cicerone.android.support.SupportAppScreen
 
-class HomeScreenFragment : MvpAppCompatFragment(), HomeView, CoroutineScope, KodeinAware {
+class HomeScreenFragment : Fragment(), CoroutineScope, KodeinAware {
     override val coroutineContext = Dispatchers.Main
     override val kodein by kodein()
 
-    companion object {
-        fun newFreament() = HomeScreenFragment()
-    }
+    private val cicerone by instance<Cicerone<Router>>()
 
     val adapter: ConnectionsViewAdapter by lazy {
         ConnectionsViewAdapter()
@@ -54,11 +53,7 @@ class HomeScreenFragment : MvpAppCompatFragment(), HomeView, CoroutineScope, Kod
 
         view.findViewById<Button>(R.id.btnAddConnection)?.apply {
             setOnClickListener {
-                activity?.supportFragmentManager?.beginTransaction()?.replace(
-                    R.id.fragmentContainer,
-                    CreateConnectionScreenFragment.newFragment()
-                )?.commitNow()
-
+                cicerone.router.navigateTo(CreateConnectionScreen())
             }
         }
 
@@ -71,13 +66,13 @@ class HomeScreenFragment : MvpAppCompatFragment(), HomeView, CoroutineScope, Kod
         return view
     }
 
-    override fun createNewConnection() {
+    /*override fun createNewConnection() {
         Log.d("Home", "createNewConnection")
     }
 
     override fun openConnection() {
         Log.d("Home", "openConnection")
-    }
+    }*/
 
 
 }
