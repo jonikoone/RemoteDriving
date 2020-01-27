@@ -6,26 +6,16 @@
     android:layout_height="wrap_content">
 
     <Button
-        android:id="@+id/btnTryNewConnection"
-        style="@style/Widget.AppCompat.Button.Borderless"
+        android:id="@+id/btnSaveConnection"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:text="Try"
+        android:text="@string/btn_save"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btnSaveConnetion"
-        app:layout_constraintTop_toBottomOf="@+id/txtIpAddress" />
-
-    <Button
-        android:id="@+id/btnSaveConnetion"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:text="Save"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/btnTryNewConnection" />
+        app:layout_constraintTop_toBottomOf="@+id/txtIpPort" />
 
     <EditText
         android:id="@+id/txtIpAddress"
@@ -35,7 +25,7 @@
         android:layout_marginTop="16dp"
         android:ems="10"
         android:inputType="text"
-        android:text="255.255.255.255"
+        android:hint="@string/hint_ip_address"
         android:textAlignment="center"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtNameConnection" />
@@ -48,7 +38,7 @@
         android:layout_marginEnd="16dp"
         android:ems="10"
         android:inputType="number"
-        android:text="8080"
+        android:hint="@string/hint_port"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/txtIpAddress"
@@ -63,10 +53,23 @@
         android:layout_marginEnd="16dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Name connection"
+        android:hint="@string/hint_name_connection"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btnDeleteConnection"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:text="@string/btn_delete"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnSaveConnection"
+        app:layout_constraintTop_toTopOf="@+id/btnSaveConnection" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

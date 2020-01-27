@@ -7,33 +7,49 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.google.gson.Gson
 import com.jonikoone.remotedriving.R
-import com.jonikoone.remotedriving.data.Offset
 import com.jonikoone.remotedriving.services.ServiceAPI
 import com.jonikoone.remotedriving.ui.views.TouchScreen
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
+import org.kodein.di.Kodein
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class ControlDriveFragment : Fragment(), CoroutineScope, KodeinAware {
     override val kodein by kodein()
     override val coroutineContext = Dispatchers.Main
 
     companion object {
+        private const val TAG_NAME = "bundle tag name connection"
         private const val TAG_ADDRESS = "bundle tag address"
-        fun newFragmet(address: String) = ControlDriveFragment().apply {
+        fun newFragmet(name: String, address: String) = ControlDriveFragment().apply {
             val bundle = Bundle()
+            bundle.putString(TAG_NAME, name)
             bundle.putString(TAG_ADDRESS, address)
             this.arguments = bundle
         }
+
+        private val TAG = this::class.java.canonicalName
+    }
+
+    private val nameConnection: String by lazy {
+        arguments?.getString(TAG_NAME, "") ?: ""
     }
 
     private val address: String by lazy {
-        val res = arguments?.getString(TAG_ADDRESS, "") ?: ""
-        Log.e("ControlerDrive:lazy", res)
-        res
+        arguments?.getString(TAG_ADDRESS, "") ?: ""
     }
+
+    private val okHttpClient by instance<OkHttpClient>()
+    private val gson by instance<Gson>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,28 +58,83 @@ class ControlDriveFragment : Fragment(), CoroutineScope, KodeinAware {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_conrol_drive, container, false)
 
-        val service: ServiceAPI by instance(arg = address)
+        val txtNameConnection = view.findViewById<TextView>(R.id.txtNameConnection)
+
+        /*if (address.isEmpty()
+            || !address.contains(':')
+            || address.count { ".".contains(it) } == 4) {
+
+        }*/
+
+        val service = Retrofit.Builder()
+            .baseUrl("http://$address/")
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+            .create(ServiceAPI::class.java)
 
         launch(Dispatchers.IO) {
-            service.sendCommand("Hello").execute()
-        }
-
-        view.findViewById<TextView>(R.id.txtNameConnection)?.apply {
-
-        }
-
-        view.findViewById<TouchScreen>(R.id.cvTouchScreen)?.apply {
-            this.onSendPosotion = {
-                //send offset of position on server
-                launch(Dispatchers.IO) {
-                    service.sendPosition(it).execute()
+            try {
+                withContext(Dispatchers.Main) {
+                    txtNameConnection?.text = nameConnection + " trying..."
                 }
+                var body = service.sendCommand("Hello").execute().body()
+                withContext(Dispatchers.Main) {
+                    txtNameConnection?.text = nameConnection + " connect"
+                }
+                initControler(view, service)
+            } catch (e: Kodein.NotFoundException) {
+                withContext(Dispatchers.Main) {
+                    txtNameConnection?.apply {
+                        setTextColor(resources.getColor(R.color.colorAccent))
+                        text = resources.getString(R.string.connection_not_available)
+                    }
+                }
+                Log.e(TAG, e.message, e)
+            } catch (e: IllegalStateException) {
+                withContext(Dispatchers.Main) {
+                    txtNameConnection?.apply {
+                        setTextColor(resources.getColor(R.color.colorAccent))
+                        text = resources.getString(R.string.connection_not_available)
+                    }
+                }
+                Log.e(TAG, e.message, e)
             }
         }
 
         return view
     }
 
+    fun initControler(view: View, service: ServiceAPI) {
+        view.findViewById<TextView>(R.id.txtNameConnection)?.apply {
 
+        }
 
+        view.findViewById<TouchScreen>(R.id.cvTouchScreen)?.apply {
+            sendPositionMouse = {
+                //send offset of position on server
+                launch(Dispatchers.IO) {
+                    service.sendPosition(it).execute()
+                }
+            }
+
+            sendPressMouseLeftButton = {
+                launch(Dispatchers.IO) {
+                    service.sendPresskMouseLeftButton().execute()
+                }
+            }
+
+            sendReleaseMouseLeftButton = {
+                launch(Dispatchers.IO) {
+                    service.sendReleaseMouseLeftButton().execute()
+                }
+            }
+
+            sendClickMouseLeftButton = {
+                launch(Dispatchers.IO) {
+                    service.sendClickMouseLeftButton().execute()
+                }
+            }
+        }
+    }
 }

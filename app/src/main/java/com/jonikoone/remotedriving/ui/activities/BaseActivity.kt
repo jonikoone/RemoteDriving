@@ -1,20 +1,15 @@
 package com.jonikoone.remotedriving.ui.activities
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.jonikoone.remotedriving.R
-import com.jonikoone.remotedriving.ui.screens.AppScreens
-import com.jonikoone.remotedriving.ui.screens.ControlDriveScreen
-import com.jonikoone.remotedriving.ui.screens.CreateConnectionScreen
-import com.jonikoone.remotedriving.ui.screens.HomeScreen
+import com.jonikoone.remotedriving.ui.screens.*
 import org.kodein.di.KodeinAware
 import org.kodein.di.android.kodein
 import org.kodein.di.generic.instance
 import ru.terrakok.cicerone.Cicerone
 import ru.terrakok.cicerone.Router
-import ru.terrakok.cicerone.Screen
 import ru.terrakok.cicerone.android.support.SupportAppNavigator
 import ru.terrakok.cicerone.android.support.SupportAppScreen
 
@@ -29,6 +24,7 @@ class BaseActivity : AppCompatActivity(), KodeinAware {
             return when (screen) {
                 is HomeScreen -> screen.fragment
                 is CreateConnectionScreen -> screen.fragment
+                is EditConnectionScreen -> screen.fragment
                 is ControlDriveScreen -> screen.fragment
             }
         }

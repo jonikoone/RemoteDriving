@@ -33,21 +33,20 @@ class HomeScreenFragment : Fragment(), CoroutineScope, KodeinAware {
 
     private val cicerone by instance<Cicerone<Router>>()
 
-    val adapter: ConnectionsViewAdapter by lazy {
-        ConnectionsViewAdapter()
-    }
+    private val adapter = ConnectionsViewAdapter()
 
     private val database by instance<ConnectionsDataBase>()
+
+    private var recyclerView: RecyclerView? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Log.e("HomeScreen", "onCreateView")
         val view = inflater.inflate(R.layout.fragment_home_screen, container, false)
 
-        view.findViewById<RecyclerView>(R.id.rvConnections)?.apply {
+        recyclerView = view.findViewById<RecyclerView>(R.id.rvConnections)?.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
             adapter = this@HomeScreenFragment.adapter
         }
@@ -58,6 +57,12 @@ class HomeScreenFragment : Fragment(), CoroutineScope, KodeinAware {
             }
         }
 
+        return view
+    }
+
+    override fun onResume() {
+        super.onResume()
+        //update recyclerView adapter
         launch(Dispatchers.IO) {
             val connections = database.connectionDao().getConnections()
             Log.e("Home", connections.toString())
@@ -65,50 +70,12 @@ class HomeScreenFragment : Fragment(), CoroutineScope, KodeinAware {
                 adapter.addConnections(connections)
             }
         }
-
-        return view
     }
 
-    /*override fun createNewConnection() {
-        Log.d("Home", "createNewConnection")
+    override fun onPause() {
+        super.onPause()
+        adapter.addConnections(listOf())
     }
-
-    override fun openConnection() {
-        Log.d("Home", "openConnection")
-    }*/
 
 
 }
-
-/*
-sealed class Screens(
-    val fragmentInstance: Fragment,
-    val screenKeyName: String,
-    val activityIntentBlock: ((Context?) -> Intent)? = null
-) : SupportAppScreen() {
-    override fun getFragment(): Fragment {
-        return fragmentInstance
-    }
-
-    override fun getScreenKey(): String {
-        return screenKeyName
-    }
-
-    override fun getActivityIntent(context: Context?): Intent {
-        activityIntentBlock?.let { return it.invoke(context) }
-        return Intent()
-    }
-}
-
-class HomeScreen(
-    fragmentInstance: Fragment = HomeScreenFragment.newFreament(),
-    screenKeyName: String = "Home Screen"
-) : Screens(
-    fragmentInstance,
-    screenKeyName
-)
-
-class CreateConnectionScreen(
-    fragmentInstance: Fragment = CreateConnectionScreenFragment.newFragment(),
-    screenKeyName: String = "Create connection Screen"
-) : Screens (fragmentInstance, screenKeyName)*/

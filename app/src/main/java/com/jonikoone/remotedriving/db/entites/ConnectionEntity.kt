@@ -11,7 +11,9 @@ data class ConnectionEntity(
     var id: Int? = null,
     @NotNull
     @ColumnInfo(name = "name_connection")
-    val name: String,
+    val name: String = "",
     @ColumnInfo(name = "address_connection")
-    val address: String
+    val address: String = "",
+    @ColumnInfo(name = "port_connection")
+    val port: Int = 0
 )

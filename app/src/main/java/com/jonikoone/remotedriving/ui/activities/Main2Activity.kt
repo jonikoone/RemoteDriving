@@ -47,7 +47,7 @@ class Main2Activity : AppCompatActivity(), CoroutineScope {
                 }
             }*/
 
-            touchScreen.onSendPosotion = {
+            touchScreen.sendPositionMouse = {
                 //            Log.e("position", it.toString())
                 launch(Dispatchers.IO) {
                     serviceAPI.sendPosition(it).execute()

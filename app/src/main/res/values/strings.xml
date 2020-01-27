@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">RemoteDriving</string>
+    <string name="hint_name_connection">Name connection</string>
+    <string name="hint_port">Port</string>
+    <string name="hint_ip_address">IP address</string>
+    <string name="btn_delete">Delete</string>
+    <string name="btn_save">Save</string>
+    <string name="pattern_address_port">%s:%d</string>
+    <string name="connection_not_available">Connection not available</string>
 </resources>

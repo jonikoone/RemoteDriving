@@ -1,6 +1,7 @@
 package com.jonikoone.remotedriving.recyclers.adapters
 
 import android.view.LayoutInflater
+import android.view.MenuInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
@@ -17,11 +18,6 @@ import org.kodein.di.android.kodein
 class ConnectionsViewAdapter : RecyclerView.Adapter<ConnectionViewHolder>(){
 
     private val connections = mutableListOf<ConnectionEntity>()
-
-    fun addConnection(newConnection: ConnectionEntity) {
-        connections += newConnection
-        notifyItemRangeInserted(connections.lastIndex, 1)
-    }
 
     fun addConnections(connections: List<ConnectionEntity>) {
         this.connections.clear()

@@ -15,4 +15,16 @@ interface ServiceAPI : RetrofitService {
     @POST("/move")
     fun sendPosition(@Body offset: Offset): Call<String>
 
+    @POST("/clickLMB")
+    fun sendClickMouseLeftButton(): Call<Unit>
+
+    @POST("/clickRMB")
+    fun sendClickMouseRightButton(): Call<Unit>
+
+    @POST("/press")
+    fun sendPresskMouseLeftButton(): Call<Unit>
+
+    @POST("/release")
+    fun sendReleaseMouseLeftButton(): Call<Unit>
+
 }
