@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.gson.Gson
 import com.jonikoone.remotedriving.R
@@ -22,10 +23,16 @@ import org.kodein.di.android.x.kodein
 import org.kodein.di.generic.instance
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import ru.terrakok.cicerone.Cicerone
+import ru.terrakok.cicerone.Router
+import java.lang.Exception
+import java.net.SocketTimeoutException
 
 class ControlDriveFragment : Fragment(), CoroutineScope, KodeinAware {
     override val kodein by kodein()
     override val coroutineContext = Dispatchers.Main
+
+    private val cicerone by instance<Cicerone<Router>>()
 
     companion object {
         private const val TAG_NAME = "bundle tag name connection"
@@ -83,19 +90,13 @@ class ControlDriveFragment : Fragment(), CoroutineScope, KodeinAware {
                     txtNameConnection?.text = nameConnection + " connect"
                 }
                 initControler(view, service)
-            } catch (e: Kodein.NotFoundException) {
+            } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     txtNameConnection?.apply {
                         setTextColor(resources.getColor(R.color.colorAccent))
                         text = resources.getString(R.string.connection_not_available)
-                    }
-                }
-                Log.e(TAG, e.message, e)
-            } catch (e: IllegalStateException) {
-                withContext(Dispatchers.Main) {
-                    txtNameConnection?.apply {
-                        setTextColor(resources.getColor(R.color.colorAccent))
-                        text = resources.getString(R.string.connection_not_available)
+                        Toast.makeText(context, "Timeout trying connection is out", Toast.LENGTH_LONG).show()
+                        cicerone.router.exit()
                     }
                 }
                 Log.e(TAG, e.message, e)
@@ -133,6 +134,12 @@ class ControlDriveFragment : Fragment(), CoroutineScope, KodeinAware {
             sendClickMouseLeftButton = {
                 launch(Dispatchers.IO) {
                     service.sendClickMouseLeftButton().execute()
+                }
+            }
+
+            sendScrollWheel = {
+                launch(Dispatchers.IO) {
+                    service.sendScrollWheel(it).execute()
                 }
             }
         }

@@ -27,4 +27,7 @@ interface ServiceAPI : RetrofitService {
     @POST("/release")
     fun sendReleaseMouseLeftButton(): Call<Unit>
 
+    @POST("/scrollwheel")
+    fun sendScrollWheel(@Body offset: Offset): Call<Unit>
+
 }
