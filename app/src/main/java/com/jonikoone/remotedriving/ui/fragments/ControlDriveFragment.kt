@@ -83,11 +83,11 @@ class ControlDriveFragment : Fragment(), CoroutineScope, KodeinAware {
         launch(Dispatchers.IO) {
             try {
                 withContext(Dispatchers.Main) {
-                    txtNameConnection?.text = nameConnection + " trying..."
+                    txtNameConnection?.text = getString(R.string.connection_trying, nameConnection)
                 }
-                var body = service.sendCommand("Hello").execute().body()
+                service.sendCommand("Hello").execute().body()
                 withContext(Dispatchers.Main) {
-                    txtNameConnection?.text = nameConnection + " connect"
+                    txtNameConnection?.text = getString(R.string.connection_connect, nameConnection)
                 }
                 initControler(view, service)
             } catch (e: Exception) {
@@ -95,7 +95,7 @@ class ControlDriveFragment : Fragment(), CoroutineScope, KodeinAware {
                     txtNameConnection?.apply {
                         setTextColor(resources.getColor(R.color.colorAccent))
                         text = resources.getString(R.string.connection_not_available)
-                        Toast.makeText(context, "Timeout trying connection is out", Toast.LENGTH_LONG).show()
+                        Toast.makeText(context, context.getString(R.string.message_timeout_try), Toast.LENGTH_LONG).show()
                         cicerone.router.exit()
                     }
                 }

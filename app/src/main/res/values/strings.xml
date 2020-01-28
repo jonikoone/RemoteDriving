@@ -7,4 +7,7 @@
     <string name="btn_save">Save</string>
     <string name="pattern_address_port">%s:%d</string>
     <string name="connection_not_available">Connection not available</string>
+    <string name="connection_trying">%s trying…</string>
+    <string name="connection_connect">%s connect</string>
+    <string name="message_timeout_try">Timeout trying connection is out</string>
 </resources>
